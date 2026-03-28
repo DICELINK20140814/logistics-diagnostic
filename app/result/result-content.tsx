@@ -18,7 +18,10 @@ function formatOku(amount: number) {
 
 function LoadingMain() {
   return (
-    <main className="min-h-screen bg-[#F8FAFC] p-10 text-[#0A2643]">
+    <main
+      className="min-h-screen bg-[#F8FAFC] p-10 text-[#0A2643]"
+      data-result-build="url-in-useeffect"
+    >
       <div className="mx-auto max-w-4xl text-slate-600">読み込み中…</div>
     </main>
   );
@@ -82,7 +85,10 @@ export function ResultContent() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F8FAFC] text-[#0A2643]">
+    <main
+      className="min-h-screen bg-[#F8FAFC] text-[#0A2643]"
+      data-result-build="url-in-useeffect"
+    >
       <div className="border-b-4 border-[#CEC1A1] bg-white">
         <div className="mx-auto flex max-w-6xl items-center gap-4 px-6 py-4">
           <img
