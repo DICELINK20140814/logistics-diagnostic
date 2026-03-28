@@ -300,6 +300,13 @@ const SECTION_ORDER = [
   "改善実行力",
 ] as const;
 
+/** UI 用。「不明」は「一部できている」と同じスコア 0 だが、ラジオの value が重複すると同時選択表示になるため区別する */
+const UNKNOWN_ANSWER_VALUE = -99;
+
+function answerValueForScoring(value: number) {
+  return value === UNKNOWN_ANSWER_VALUE ? 0 : value;
+}
+
 function getImprovementRate(score: number) {
   if (score <= -1.5) return 0.06;
   if (score <= -1.0) return 0.05;
@@ -354,7 +361,9 @@ export default function DiagnosticPage() {
     };
 
     QUESTIONS.forEach((q) => {
-      driverQuestionMap[q.driver].push(answers[q.id] ?? 0);
+      driverQuestionMap[q.driver].push(
+        answerValueForScoring(answers[q.id] ?? 0)
+      );
     });
 
     const weightedDriverScores = Object.entries(driverQuestionMap).map(
@@ -508,7 +517,7 @@ export default function DiagnosticPage() {
                         { label: "一部できている", value: 0 },
                         { label: "課題あり", value: -1 },
                         { label: "大きな課題", value: -2 },
-                        { label: "不明", value: 0 },
+                        { label: "不明", value: UNKNOWN_ANSWER_VALUE },
                       ].map((option, i) => (
                         <label
                           key={`${q.id}-${i}`}
