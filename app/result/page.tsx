@@ -1,6 +1,9 @@
 import { Suspense } from "react";
 import { ResultContent } from "./result-content";
 
+/** クエリ `?data=` 依存のため静的プリレンダーを避ける（Vercel ビルド安定化） */
+export const dynamic = "force-dynamic";
+
 export default function ResultPage() {
   return (
     <Suspense
