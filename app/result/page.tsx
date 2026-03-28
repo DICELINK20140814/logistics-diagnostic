@@ -1,7 +1,5 @@
-import { ResultClientShell } from "./result-client-shell";
-
-export const dynamic = "force-dynamic";
+import { ResultContent } from "./result-content";
 
 export default function ResultPage() {
-  return <ResultClientShell />;
+  return <ResultContent />;
 }

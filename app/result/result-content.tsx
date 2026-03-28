@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type Driver = {
   key: string;
@@ -16,11 +16,29 @@ function formatOku(amount: number) {
   return `${(amount / 100000000).toFixed(1)}億円`;
 }
 
-export function ResultContent() {
-  const searchParams = useSearchParams();
-  const raw = searchParams.get("data");
+function LoadingMain() {
+  return (
+    <main className="min-h-screen bg-[#F8FAFC] p-10 text-[#0A2643]">
+      <div className="mx-auto max-w-4xl text-slate-600">読み込み中…</div>
+    </main>
+  );
+}
 
-  if (!raw) {
+export function ResultContent() {
+  const [dataParam, setDataParam] = useState<string | null | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setDataParam(params.get("data"));
+  }, []);
+
+  if (dataParam === undefined) {
+    return <LoadingMain />;
+  }
+
+  if (!dataParam) {
     return (
       <main className="min-h-screen bg-white p-10 text-[#0A2643]">
         <div className="mx-auto max-w-4xl">
@@ -36,7 +54,7 @@ export function ResultContent() {
     );
   }
 
-  const data = JSON.parse(decodeURIComponent(raw)) as {
+  let data: {
     businessType: string;
     annualRevenueOku: number;
     improvementRate: number;
@@ -44,6 +62,24 @@ export function ResultContent() {
     topDrivers: Driver[];
     priorityAction: string;
   };
+
+  try {
+    data = JSON.parse(decodeURIComponent(dataParam));
+  } catch {
+    return (
+      <main className="min-h-screen bg-white p-10 text-[#0A2643]">
+        <div className="mx-auto max-w-4xl">
+          <p className="mb-6">結果データの形式が正しくありません。</p>
+          <Link
+            href="/diagnostic"
+            className="rounded-xl bg-[#0A2643] px-6 py-3 text-white"
+          >
+            診断画面に戻る
+          </Link>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-[#F8FAFC] text-[#0A2643]">
